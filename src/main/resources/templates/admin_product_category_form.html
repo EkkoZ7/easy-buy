@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('分类管理')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<div>
+    <table border="0" class="add_tab" style="width:930px;" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="135" align="right">分类级别</td>
+            <td colspan="3" style="font-family:'宋体';"
+                th:text="${parentProductCategory.type == 0 ? '一级分类' : (parentProductCategory.type == 1 ? '二级分类': '三级分类')}">
+            </td>
+        </tr>
+        <tr th:if="${parentProductCategory.type != 0}">
+        <td width="135" align="right">父级分类</td>
+        <td colspan="3" style="font-family:'宋体';">
+            <select name="parentId" style="background-color:#f6f6f6;"  id="parentId">
+                <option value="-1" selected="selected">请选择...</option>
+                <option th:field="*{parentProductCategory.id}" th:each="parentTypeProductCategory : ${parentTypeProductCategoryList}" th:value="${parentTypeProductCategory.id}" th:text="${parentTypeProductCategory.name}"></option>
+            </select>
+        </td>
+        </tr>
+        <tr>
+            <td align="right">分类名称</td>
+            <td style="font-family:'宋体';">
+                <input type="text" class="add_ipt" id="name"/>（必填）
+                <input type="hidden" name="id" value="${productCategory.id}" id="id">
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td align="left"><a th:onclick="saveOrUpdate([[${parentProductCategory.type + 1}]]);" class="add_b">确认添加</a></td>
+        </tr>
+    </table>
+</div>
+<script>
+    function saveOrUpdate(type) {
+        var parentId;
+        if (type === 1){
+            parentId = 0
+        } else {
+            parentId = $("#parentId").val();
+        }
+        if (parentId == -1){
+            alert("请选择父类别")
+            return
+        }
+        $.ajax({
+            url: "/admin/products/categories",
+            type: "post",
+            data:{
+                name: $("#name").val(),
+                parentId: parentId,
+                type: type,
+                iconClass: ''
+            },
+            success: function (result) {
+                if (result.code == 200){
+                    alert("添加成功")
+                    location.href="/admin/product/category/list"
+                }
+            }
+        })
+
+    }
+</script>
+<div th:replace="common::commonFooter"></div>
+</body>
+</html>

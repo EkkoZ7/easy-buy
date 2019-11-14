@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('用户列表')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<!--Begin 用户中心 Begin -->
+<div class="m_content">
+    <div th:replace="admin_common::leftBar(9)"></div>
+    <div class="m_right" id="content">
+        <div class="mem_tit">用户列表</div>
+        <p align="right">
+            <a href="/admin/users" class="add_b">添加用户</a>
+            <br>
+        </p>
+        <br>
+        <table border="0" class="order_tab" style="width:930px; text-align:center; margin-bottom:30px;"
+               cellspacing="0" cellpadding="0">
+            <tbody>
+            <tr>
+                <td width="10%">用户名称</td>
+                <td width="10%">真实姓名</td>
+                <td width="5%">性别</td>
+                <td width="5%">类型</td>
+                <td width="5%" colspan="2">操作</td>
+            </tr>
+            <tr th:each="user : ${userList}">
+                <td>[[${user.loginName}]]</td>
+                <td>[[${user.userName}]]</td>
+                <td th:text="${user.sex == 0 ? '女' : '男'}"></td>
+                <td th:text="${user.type == 1 ? '管理员': '用户'}"></td>
+                <td>
+                    <a th:href="@{/admin/users/} + ${user.id}">修改</a>
+                </td>
+                <td>
+                    <a th:if="${session.user.type == 1}" href="javascript:void(0);"
+                       th:onclick="deleteUser(this,[[${user.id}]]);">删除</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+<script>
+    function deleteUser(ele,id) {
+        if (!confirm("确认要删除该用户吗？"))
+            return
+        $.ajax({
+            url: "/admin/users/"+id,
+            type: "delete",
+            success: function (result) {
+                if (result.code == 200){
+                    $(ele).parent().parent().remove()
+                    alert('删除成功!')
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

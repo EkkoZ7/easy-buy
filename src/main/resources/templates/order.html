@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('订单详情')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div class="content mar_20">
+    <img src="/images/img2.jpg"/>
+</div>
+
+<div class="content mar_20">
+    <div class="two_bg">
+        <div class="two_t">
+            <span class="fr"><a href="/cart" onclick="settlement1();">修改</a></span>商品列表
+        </div>
+        <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="car_th" width="550">商品名称</td>
+                <td class="car_th" width="150">购买数量</td>
+                <td class="car_th" width="130">小计</td>
+            </tr>
+            <tr th:each="product : ${carInfo.products}" th:id="${product.id}" class="product-id">
+                <td>
+                    <div class="c_s_img">
+                        <img th:src="@{/images/} + ${product.filename}" width="73" height="73"/>
+                    </div>
+                    <span th:text="${product.name}"></span>
+                </td>
+                <td align="center" class="quantity" th:text="${carInfo.quantity[product.id]}"></td>
+                <td align="center" style="color:#ff4e00;"
+                    th:text="'￥' + ${product.price * carInfo.quantity[product.id]}"></td>
+            </tr>
+        </table>
+
+        <div class="two_t">
+            <span class="fr"></span>收货人信息
+        </div>
+        <table border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="p_td" width="160">用户名称</td>
+                <td width="395" th:text="${session.user.userName}">${sessionScope.loginUser.userName}</td>
+                <td class="p_td">登录名称</td>
+                <td th:text="${session.user.LoginName}"></td>
+            </tr>
+            <tr>
+                <td class="p_td">手机</td>
+                <td th:text="${session.user.mobile}"></td>
+                <td class="p_td" width="160">电子邮件</td>
+                <td width="395" th:text="${session.user.email}"></td>
+            </tr>
+        </table>
+        <div class="two_t">
+            <span class="fr"></span>选择地址
+        </div>
+        <table id="address-table" border="0" class="peo_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+            <tr th:each="address,iterStat : ${userAddresses}">
+                <td class="p_td" width="160">
+                    <span th:if="${address.remark}" th:text="${address.remark}" class="remark-span"></span>
+                    <span th:if="!${address.remark}" th:text="${iterStat.index + 1}"></span>
+                    <input type="radio" name="selectAddress" th:value="${address.id}">
+                </td>
+                <td th:text="${address.address}" class="address-span">
+                </td>
+            </tr>
+            <tr>
+                <td class="p_td" width="160">
+                    新地址<input type="radio" class="new-address" name="selectAddress" value="-1">
+                </td>
+                <td>
+                    地址&nbsp;<input type="text" value="" name="address" class="add_ipt address-input">&nbsp;
+                    备注&nbsp;<input type="text" value="" name="remark" class="add_ipt remark-input">
+                </td>
+            </tr>
+        </table>
+        <table border="0" style="width:900px; margin-top:20px;" cellspacing="0" cellpadding="0">
+            <tr height="70">
+                <td align="right">
+                    <b style="font-size:14px;">应付款金额：<span
+                            style="font-size:22px; color:#ff4e00;">￥[[${carInfo.priceSum}]]</span></b>
+                </td>
+            </tr>
+            <tr height="70">
+                <td align="right"><a href="javascript:void(0);" onclick="submitOrder()"><img
+                        src="/images/btn_sure.gif"/></a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+<script>
+    function submitOrder() {
+        var ids = [];
+        $.each($(".product-id"), function (i, o) {
+            ids.push(eval($(o).attr("id")))
+        })
+        var $addressRadio = $("#address-table input[name=selectAddress]:radio:checked")
+        var $addressTr = $addressRadio.parent().parent();
+        var id = $addressRadio.val()
+        var address;
+        var remark;
+        if ($addressRadio.hasClass("new-address")) {
+            address = $(".address-input").val()
+            remark = $(".remark-input").val()
+        } else if ($addressRadio.length == 0) {
+            alert("请选择收获地址")
+            return;
+        } else {
+            remark = $addressTr.find(".remark-span").text();
+            address = $addressTr.find(".address-span").text();
+        }
+        $.ajax({
+            url: '/order',
+            type: "post",
+            data: {
+                id: id,
+                remark: remark,
+                address: address
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    alert("成功下单！")
+                    location.href = "/order/" + result.data;
+                }
+            }
+
+        })
+    }
+</script>
+</body>
+</html>

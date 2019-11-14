@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('用户中心')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div th:replace="admin_common::leftBar(2)"></div>
+        <div class="m_right" id="content">
+            <div class="m_des">
+                <table border="0" style="width:870px; line-height:22px;" cellspacing="0" cellpadding="0">
+                    <tr valign="top">
+                        <td width="115"><img src="/images/user.jpg" width="90" height="90" /></td>
+                        <td>
+                            <div class="m_user">[[${session.user.userName}]]</div><br />
+                            <p>
+                                性别:<span th:text="${session.user.sex == 1 ? '男':'女'}"></span>
+                                <br /><br />
+                                邮箱:[[${session.user.email}]]<br /><br />
+                                电话:[[${session.user.mobile}]]<br /><br />
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+</body>
+</html>

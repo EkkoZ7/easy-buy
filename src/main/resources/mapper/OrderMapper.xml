@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekko.easy.buy.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.ekko.easy.buy.domain.Order">
+        <!--@mbg.generated generated on Wed Nov 06 17:25:33 CST 2019.-->
+        <!--@Table easybuy_order-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userId"/>
+        <result column="loginName" jdbcType="VARCHAR" property="loginName"/>
+        <result column="userAddress" jdbcType="VARCHAR" property="userAddress"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="cost" jdbcType="FLOAT" property="cost"/>
+        <result column="serialNumber" jdbcType="VARCHAR" property="serialNumber"/>
+    </resultMap>
+
+    <resultMap id="WithOrderDetailListResultMap" type="com.ekko.easy.buy.domain.Order">
+        <id column="a.id" jdbcType="INTEGER" property="id"/>
+        <result column="userId" jdbcType="INTEGER" property="userId"/>
+        <result column="loginName" jdbcType="VARCHAR" property="loginName"/>
+        <result column="userAddress" jdbcType="VARCHAR" property="userAddress"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="a.cost" jdbcType="FLOAT" property="cost"/>
+        <result column="serialNumber" jdbcType="VARCHAR" property="serialNumber"/>
+        <collection property="orderDetailList" column="orderId" ofType="com.ekko.easy.buy.domain.OrderDetail">
+            <id column="b.id" jdbcType="INTEGER" property="id"/>
+            <result column="orderId" jdbcType="INTEGER" property="orderId"/>
+            <result column="productId" jdbcType="INTEGER" property="productId"/>
+            <result column="quantity" jdbcType="INTEGER" property="quantity"/>
+            <result column="b.cost" jdbcType="FLOAT" property="cost"/>
+          <association column="productId" property="product" javaType="com.ekko.easy.buy.domain.Product">
+            <result column="productId" property="id"/>
+            <result column="name" property="name"/>
+            <result column="fileName" property="filename"/>
+          </association>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated generated on Wed Nov 06 17:25:33 CST 2019.-->
+        id, userId, loginName, userAddress, createTime, cost, serialNumber
+    </sql>
+  <sql id="With_OrderDetailList_Column_List">
+    <!--@mbg.generated generated on Wed Nov 06 17:25:33 CST 2019.-->
+    a.id as `a.id`, a.userId, a.loginName, a.userAddress, a.createTime, a.cost as `a.cost`, serialNumber,
+    productId, quantity, b.cost as `b.cost`, b.id as `b.id`,b.orderId,
+    c.fileName,c.`name`,c.id as `c.id`
+  </sql>
+    <select id="selectWithOrderDetailList" resultMap="WithOrderDetailListResultMap">
+        SELECT
+         <include refid="With_OrderDetailList_Column_List"/>
+        FROM `easybuy_order` AS a
+        LEFT JOIN easybuy_order_detail as b on a.id=b.orderId
+        LEFT JOIN easybuy_product as c ON c.id = b.productId
+    </select>
+
+    <select id="selectByUerIdWithOrderDetailList" resultMap="WithOrderDetailListResultMap">
+        SELECT
+        <include refid="With_OrderDetailList_Column_List"/>
+        FROM `easybuy_order` AS a
+        LEFT JOIN easybuy_order_detail as b on a.id=b.orderId
+        LEFT JOIN easybuy_product as c ON c.id = b.productId
+        WHERE userId = #{id}
+    </select>
+</mapper>

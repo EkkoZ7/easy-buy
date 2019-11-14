@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('商品管理')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div th:replace="admin_common::leftBar(${menu})"></div>
+        <div class="m_right" id="content">
+            <div class="mem_tit" th:text="${product.id == null ? '添加商品' : '修改商品'}"></div>
+            <br>
+            <form action="/admin/products" method="post" enctype="multipart/form-data"
+                  id="productAdd">
+                <table border="0" class="add_tab" style="width:930px;" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="135" align="right">一级分类</td>
+                        <td colspan="3" style="font-family:'宋体';">
+                            <select name="categoryLevel1Id" style="background-color:#f6f6f6;" id="productCategoryLevel1"
+                                    onchange="queryProductCategoryList(this,'#productCategoryLevel2');">
+                                <option value="-1" selected="selected">请选择...</option>
+                                <option th:each="productCategory : ${productCategoryLevel1List}"
+                                        th:value="${productCategory.id}" th:field="*{product.categoryLevel1Id}"
+                                        th:text="${productCategory.name}"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">二级分类</td>
+                        <td>
+                            <select name="categoryLevel2Id" style="background-color:#f6f6f6;"
+                                    id="productCategoryLevel2"
+                                    onchange="queryProductCategoryList(this,'#productCategoryLevel3');">
+                                <option value="0" selected="selected">请选择...</option>
+                                <option th:each="productCategory : ${productCategoryLevel2List}"
+                                        th:value="${productCategory.id}" th:field="*{product.categoryLevel2Id}"
+                                        th:text="${productCategory.name}"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">三级分类</td>
+                        <td>
+                            <select name="categoryLevel3Id" style="background-color:#f6f6f6;"
+                                    id="productCategoryLevel3">
+                                <option value="0" selected="selected">请选择...</option>
+                                <option th:each="productCategory : ${productCategoryLevel3List}"
+                                        th:value="${productCategory.id}" th:field="*{product.categoryLevel3Id}"
+                                        th:text="${productCategory.name}"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">商品名称</td>
+                        <td>
+                            <input type="text" th:value="${product.name}" class="add_ipt" name="name" id="name"/>（必填）
+                            <input type="hidden" name="id" th:value="${product.id}" id="id">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">商品图片</td>
+                        <td>
+                            <img th:src="@{/images/} + ${product.filename}"
+                                 th:if="${product.filename != null && product.filename != ''}" width="50" height="50"/>
+                            <input type="file" class="text" name="photo" accept="image/*"/><span></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">单价</td>
+                        <td>
+                            <input type="text" th:value="${product.price}" class="add_ipt" name="price" id="price"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">库存</td>
+                        <td>
+                            <input type="text" th:value="${product.stock}" class="add_ipt" name="stock" id="stock"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">描述</td>
+                        <td>
+                            <textarea name="description" th:value="${product.description}"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" th:value="${product.id == null ? '商品上架' : '确认修改'}" class="s_btn">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+<script>
+    function queryProductCategoryList(ele, type) {
+        var id = $(ele).val()
+        $.ajax({
+            url: "/admin/products/categories/" + id,
+            type: "get",
+            success: function (result) {
+                var $select = $(type);
+                $select.children().remove();
+                $select.append(`<option value="0" selected="selected">请选择...</option>`)
+                $.each(result.data, function (i, o) {
+                    $select.append(`<option value="${o.id}">${o.name}</option>`)
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>

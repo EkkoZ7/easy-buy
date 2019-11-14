@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekko.easy.buy.mapper.UserAddressMapper">
+  <resultMap id="BaseResultMap" type="com.ekko.easy.buy.domain.UserAddress">
+    <!--@mbg.generated generated on Wed Nov 06 17:26:42 CST 2019.-->
+    <!--@Table easybuy_user_address-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Wed Nov 06 17:26:42 CST 2019.-->
+    id, userId, address, createTime, isDefault, remark
+  </sql>
+</mapper>

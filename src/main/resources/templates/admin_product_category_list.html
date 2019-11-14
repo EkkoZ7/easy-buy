@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('分类列表')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<script>
+    function toAddProductCategory() {
+        var parentId = $("input[name=select]:checked").val();
+        if (parentId){
+            location.href="/admin/product/category/form/" + parentId
+        } else {
+            location.href="/admin/product/category/form/"
+        }
+    }
+</script>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div th:replace="admin_common::leftBar(4)"></div>
+        <div class="m_right" id="content">
+            <div class="mem_tit">分类列表</div>
+            <p align="right">
+                <a href="javascript:void(0);" onclick="toAddProductCategory();" class="add_b">添加分类</a>
+                <br>
+            </p>
+            <br>
+            <table border="0" class="order_tab" style="width:930px; text-align:center; margin-bottom:30px;" cellspacing="0" cellpadding="0">
+                <tbody>
+                <tr>
+                    <td width="5%">选择</td>
+                    <td width="20%">分类名称</td>
+                    <td width="25%">分类级别</td>
+                    <td width="25%">父级分类</td>
+                    <td width="25%" >操作</td>
+                </tr>
+                    <tr th:each="productCategory : ${productCategoryList}">
+                        <td width="5%"><input type="radio" th:value="${productCategory.id}" th:disabled="${productCategory.type == 3}" name="select" onclick="toUpdateProductCategoryList(this);"/></td>
+                        <td>[[${productCategory.name}]]</td>
+                        <td th:switch="${productCategory.type}">
+                            <span th:case="1">一级分类</span>
+                            <span th:case="2">二级分类</span>
+                            <span th:case="3">三级分类</span>
+                        </td>
+                        <td th:text="${productCategory.parentName == null ? '无' : productCategory.parentName}"></td>
+                        <td><a href="javascript:void(0);" th:onclick="deleteProductCategory(this,[[${productCategory.id}]]);">删除</a></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+            <div id="addProductCategory">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function deleteProductCategory(ele,id) {
+        if(!confirm("确认要删除该分类吗")) return
+        $.ajax({
+            url: "/admin/products/categories/" + id,
+            type: "delete",
+            success: function (result) {
+                if (result.code == 200){
+                    $(ele).parent().parent().remove()
+                    alert("删除成功");
+                }
+            }
+        })
+    }
+</script>
+<div th:replace="common::commonFooter"></div>
+</body>
+</html>

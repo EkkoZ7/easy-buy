@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekko.easy.buy.mapper.ProductMapper">
+    <resultMap id="BaseResultMap" type="com.ekko.easy.buy.domain.Product">
+        <!--@mbg.generated generated on Wed Nov 06 17:26:07 CST 2019.-->
+        <!--@Table easybuy_product-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="price" jdbcType="FLOAT" property="price"/>
+        <result column="stock" jdbcType="INTEGER" property="stock"/>
+        <result column="categoryLevel1Id" jdbcType="INTEGER" property="categoryLevel1Id"/>
+        <result column="categoryLevel2Id" jdbcType="INTEGER" property="categoryLevel2Id"/>
+        <result column="categoryLevel3Id" jdbcType="INTEGER" property="categoryLevel3Id"/>
+        <result column="fileName" jdbcType="VARCHAR" property="filename"/>
+        <result column="isDelete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+
+    <resultMap id="WithCategoryNameResultMap" type="com.ekko.easy.buy.domain.Product">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="price" jdbcType="FLOAT" property="price"/>
+        <result column="stock" jdbcType="INTEGER" property="stock"/>
+        <result column="categoryLevel1Id" jdbcType="INTEGER" property="categoryLevel1Id"/>
+        <result column="categoryLevel2Id" jdbcType="INTEGER" property="categoryLevel2Id"/>
+        <result column="categoryLevel3Id" jdbcType="INTEGER" property="categoryLevel3Id"/>
+      <result column="categoryLevel1Name" jdbcType="INTEGER" property="categoryLevel1Name"/>
+      <result column="categoryLevel2Name" jdbcType="INTEGER" property="categoryLevel2Name"/>
+      <result column="categoryLevel3Name" jdbcType="INTEGER" property="categoryLevel3Name"/>
+        <result column="fileName" jdbcType="VARCHAR" property="filename"/>
+        <result column="isDelete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated generated on Wed Nov 06 17:26:07 CST 2019.-->
+        id, `name`, description, price, stock, categoryLevel1Id, categoryLevel2Id, categoryLevel3Id,
+        fileName, isDelete
+    </sql>
+    <sql id="WithCategoryName_Column_List">
+        a.*, b.name as categoryLevel1Name, c.name as categoryLevel2Name, d.name as categoryLevel3Name
+    </sql>
+    <select id="selectByIdWithCategoryName" resultMap="WithCategoryNameResultMap">
+        SELECT
+        <include refid="WithCategoryName_Column_List"/>
+        FROM
+        `easybuy_product` AS a
+        LEFT JOIN easybuy_product_category AS b ON a.categoryLevel1Id = b.id
+        LEFT JOIN easybuy_product_category AS c ON a.categoryLevel2Id = c.id
+        LEFT JOIN easybuy_product_category AS d ON a.categoryLevel3Id = d.id
+        WHERE a.id = #{id}
+    </select>
+</mapper>

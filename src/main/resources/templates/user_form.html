@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('用户管理')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div th:replace="admin_common::leftBar(10)"></div>
+        <div class="m_right" id="content">
+            <div class="mem_tit" th:text="${user == null} ? '添加用户':'修改用户'"></div>
+            <br>
+            <form action="/admin/users" method="post" id="userAdd">
+                <table border="0" class="add_tab" style="width:930px;" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="135" align="right">用户名称</td>
+                        <td colspan="3" style="font-family:'宋体';">
+                            <input type="text" th:value="${user.loginName}" class="add_ipt" name="loginName"/>
+                            <input type="hidden" th:value="${user.id}" name="id">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">真实姓名</td>
+                        <td>
+                            <input type="text" th:value="${user.userName}" class="add_ipt" name="userName"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="135" align="right">性别</td>
+                        <td>
+                            <label>男</label><input type="radio" value="1" th:field="*{user.sex}"  name="sex"/>
+                            <label>女</label><input type="radio" value="0" th:field="*{user.sex}" name="sex"/>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${user.id == 0}">
+                        <td width="135" align="right">密码</td>
+                        <td>
+                            <input type="password" value="" class="add_ipt" name="password"/>
+                        </td>
+                    </tr>
+                    <tr th:if="${user.id == 0}">
+                        <td width="135" align="right">确认密码</td>
+                        <td>
+                            <input type="password" value="" class="add_ipt" name="repPassword"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">身份证号</td>
+                        <td>
+                            <input type="text" th:value="${user.identityCode}" class="add_ipt" name="identityCode"
+                                   id="identityCode"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">电子邮箱</td>
+                        <td>
+                            <input type="text" th:value="${user.email}" class="add_ipt" name="email" id="email"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">手机</td>
+                        <td>
+                            <input type="text" th:value="${user.mobile}" class="add_ipt" name="mobile" id="mobile"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="135" align="right">用户类型</td>
+                        <td>
+                            <select name="type">
+                                <option value="1" th:selected="${user != null && user.type == 1}"
+                                >管理员
+                                </option>
+                                <option value="0"
+                                        th:selected="${user != null && user.type == 0}"
+                                >普通用户
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" th:value="${user.id == 0 ? '新增用户' : '修改信息'}" class="s_btn">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+</body>
+</html>

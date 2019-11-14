@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekko.easy.buy.mapper.ProductCategoryMapper">
+    <resultMap id="BaseResultMap" type="com.ekko.easy.buy.domain.ProductCategory">
+        <!--@mbg.generated generated on Wed Nov 06 17:26:20 CST 2019.-->
+        <!--@Table easybuy_product_category-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="parentId" jdbcType="INTEGER" property="parentId"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="iconClass" jdbcType="VARCHAR" property="iconClass"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated generated on Wed Nov 06 17:26:20 CST 2019.-->
+        id, `name`, parentId, `type`, iconClass
+    </sql>
+    <select id="selectListWithParentName" resultType="com.ekko.easy.buy.domain.ProductCategory">
+        SELECT a.*, b.name as parentName FROM `easybuy_product_category` as a
+        LEFT JOIN `easybuy_product_category` as b on a.parentId = b.id
+        ORDER BY a.type
+  </select>
+</mapper>

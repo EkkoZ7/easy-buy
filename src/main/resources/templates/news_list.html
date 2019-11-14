@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('资讯列表')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div th:replace="common::commonSearchBar"></div>
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+    <div class="m_content">
+        <div th:replace="admin_common::leftBar(7)"></div>
+        <div class="m_right">
+            <p></p>
+            <div class="mem_tit">资讯列表</div>
+            <table border="0" class="order_tab" style="width:930px; text-align:center; margin-bottom:30px;"
+                   cellspacing="0" cellpadding="0">
+                <tbody>
+                <tr>
+                    <td width="20%">文章标题</td>
+                    <td width="25%">创建时间</td>
+                </tr>
+                <tr th:each="news : ${newsList}">
+                    <td><a th:href="@{/news/} + ${news.id}">[[${news.title}]]</a></td>
+                    <td>[[${news.createTime}]]</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="common::commonFooter"></div>
+</body>
+</html>

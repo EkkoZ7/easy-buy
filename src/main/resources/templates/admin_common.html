@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonHead(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${title}">Document</title>
+    <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+    <!--[if IE 6]>
+    <script src="/js/common/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input, a');
+    </script>
+    <![endif]-->
+    <script type="text/javascript" src="/js/common/jquery-1.11.1.min_044d0927.js"></script>
+    <script type="text/javascript" src="/js/common/jquery.bxslider_e88acd1b.js"></script>
+
+    <script type="text/javascript" src="/js/common/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="/js/common/menu.js"></script>
+
+    <script type="text/javascript" src="/js/common/select.js"></script>
+
+    <script type="text/javascript" src="/js/common/lrscroll.js"></script>
+    <script type="text/javascript" src="/js/common/iban.js"></script>
+    <script type="text/javascript" src="/js/common/fban.js"></script>
+    <script type="text/javascript" src="/js/common/f_ban.js"></script>
+    <script type="text/javascript" src="/js/common/mban.js"></script>
+    <script type="text/javascript" src="/js/common/bban.js"></script>
+    <script type="text/javascript" src="/js/common/hban.js"></script>
+    <script type="text/javascript" src="/js/common/tban.js"></script>
+    <script type="text/javascript" src="/js/common/lrscroll_1.js"></script>
+
+    <script type="text/javascript" src="/js/app/app.js"></script>
+</head>
+<body>
+<div class="m_left" th:fragment="leftBar(menu)">
+    <div class="left_n">管理中心</div>
+    <div class="left_m">
+        <div class="left_m_t t_bg1">订单中心</div>
+        <ul>
+            <li><a href="/order/list"
+                   th:class="${menu == 1 ? 'now' : ''}">我的订单</a></li>
+            <li th:if="${session.user.type==1}"><a href="/admin/order/list"
+                                                   th:class="${menu == 8 ? 'now' : ''}"
+            >全部订单</a></li>
+        </ul>
+    </div>
+    <div class="left_m">
+        <div class="left_m_t t_bg2">会员中心</div>
+        <ul>
+            <li><a href="/user" th:class="${menu == 2 ? 'now' : ''}"
+            >用户信息</a></li>
+            <li th:if="${session.user.type==1}"><a href="/admin/user/list"
+                                                   th:class="${menu == 9 ? 'now' : ''}"
+            >用户列表</a></li>
+        </ul>
+    </div>
+    <div class="left_m" th:if="${session.user.type==1}">
+        <div class="left_m_t t_bg2">商品管理</div>
+        <ul>
+            <li><a href="/admin/product/category/list" th:class="${menu == 4 ? 'now' : ''}"
+            >分类管理</a></li>
+            <li><a href="/admin/product/list"
+                   th:class="${menu == 5 ? 'now' : ''}">
+                商品管理</a></li>
+            <li><a href="/admin/product/form" th:class="${menu == 6 ? 'now' : ''}"
+            >商品上架</a></li>
+        </ul>
+    </div>
+    <div class="left_m">
+        <div class="left_m_t t_bg2">资讯中心</div>
+        <ul>
+            <li><a href="/news/list" th:class="${menu == 7 ? 'now' : ''}"
+            >资讯列表</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

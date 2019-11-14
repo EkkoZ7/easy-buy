@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common::commonHead('购物车')"></head>
+<body>
+<div th:replace="common::commonSoubg"></div>
+<div class="content mar_20">
+    <img src="/images/img1.jpg"/>
+</div>
+<!--Begin 第一步：查看购物车 Begin -->
+<div class="content mar_20">
+    <table border="0" class="car_tab" style="width:1200px; margin-bottom:50px;" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="car_th" width="200">商品名称</td>
+            <td class="car_th" width="150">单价</td>
+            <td class="car_th" width="150">购买数量</td>
+            <td class="car_th" width="130">小计</td>
+            <td class="car_th" width="150">操作</td>
+        </tr>
+        <tr th:each="product : ${cartInfo.products}">
+            <td>
+                <div class="c_s_img">
+                    <a th:href="@{/products/} + ${product.id}"><img
+                            th:src="@{/images/} + ${product.filename}" width="73" height="73"/></a>
+                </div>
+                [[ ${product.name} ]]
+            </td>
+            <td align="center" class="price" style="color:#ff4e00;">￥[[${product.price}]]</td>
+            <td align="center">
+                <div class="c_num">
+                    <input type="button" value="" th:onclick="subCount(this,[[${product.id}]]);" class="car_btn_1"/>
+                    <input type="text" th:value="${cartInfo.quantity[product.id]}" name="" class="car_ipt"/>
+                    <input type="button" value=""
+                           th:onclick="addCount(this,[[${product.id}]]);" class="car_btn_2"/>
+                </div>
+            </td>
+            <td align="center" class="subtotal" style="color:#ff4e00;" th:with="subtotal=${ cartInfo.quantity[product.id] * product.price }" th:text="'￥' + ${subtotal}"></td>
+            <td align="center"><a href="javascript:void(0);" th:onclick="removeCart(this,[[${product.id}]]);">删除</a>&nbsp;
+                &nbsp;
+            </td>
+        </tr>
+        <tr height="70">
+            <td colspan="6" style="font-family:'Microsoft YaHei'; border-bottom:0;">
+                    <span class="fr" th:if="${session.cart == null || session.cart.items.size() == 0}">商品总价：<b style="font-size:22px; color:#ff4e00;">￥0</b></span>
+                    <span class="fr" th:if="${session.cart != null && session.cart.items.size() > 0}" >商品总价：<b class="price_sum" style="font-size:22px; color:#ff4e00;" th:text="'￥' + ${cartInfo.priceSum}"></b></span>
+            </td>
+        </tr>
+        <tr valign="top" height="150">
+            <td colspan="6" align="right">
+                <a href="/index"><img src="/images/buy1.gif"/></a>&nbsp;&nbsp;
+                    <a href="/order"><img
+                            src="/images/buy2.gif"/></a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="common::commonFooter"></div>
+<script>
+    $(function () {
+    })
+    function addCount(ele, id){
+        var $num = $(ele).prev();
+        $num.val(eval($num.val()) + 1)
+        changeProductNum($num,id)
+    }
+
+    function subCount(ele, id){
+        var $num = $(ele).next();
+        $num.val(eval($num.val()) - 1)
+        changeProductNum($num,id)
+    }
+
+    function changeProductNum(ele, id) {
+        var num = eval(ele.val());
+        var price = eval(ele.parent().parent().parent().find(".price").text().substring(1))
+        var subtotal = num * price
+        ele.parent().parent().parent().find(".subtotal").text('￥' + subtotal)
+        ele.parent()
+        $.ajax({
+            url: "/cart",
+            data: {
+                quantity: num,
+                productId: id
+            },
+            type: "PATCH"
+        })
+        getCartInfo();
+    }
+
+    function getCartInfo() {
+        $.ajax({
+            url: '/cart_info',
+            type: "get",
+            success: function (result) {
+                $(".price_sum").text('￥' + result.data.priceSum)
+            }
+        })
+    }
+
+    function removeCart(ele, productId) {
+        if (!confirm("确定要删除该商品吗？"))
+            return
+        $.ajax({
+            url: '/cart',
+            type: 'delete',
+            data: {
+                productId: productId
+            },
+            success: function (data) {
+                if (data.code == 200){
+                    getCartInfo();
+                    $(ele).parent().parent().remove();
+                    alert("成功删除");
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>
